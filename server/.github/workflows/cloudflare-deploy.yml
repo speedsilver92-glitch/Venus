@@ -1,0 +1,58 @@
+name: Deploy Privora to Cloudflare
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: privora-production
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  verify-and-deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      PRIVORA_JWT_SECRET: ${{ secrets.PRIVORA_JWT_SECRET }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run tests
+        run: npm test
+
+      - name: Build web app
+        run: npm run build
+
+      - name: Check deployment secrets
+        shell: bash
+        run: |
+          test -n "$CLOUDFLARE_API_TOKEN" || { echo "Missing CLOUDFLARE_API_TOKEN"; exit 1; }
+          test -n "$CLOUDFLARE_ACCOUNT_ID" || { echo "Missing CLOUDFLARE_ACCOUNT_ID"; exit 1; }
+          test -n "$PRIVORA_JWT_SECRET" || { echo "Missing PRIVORA_JWT_SECRET"; exit 1; }
+
+      - name: Deploy free Worker + Durable Object
+        shell: bash
+        run: |
+          jq -n --arg jwt "$PRIVORA_JWT_SECRET" '{JWT_SECRET:$jwt}' > "$RUNNER_TEMP/privora-deploy-secrets.json"
+          npx wrangler deploy --secrets-file "$RUNNER_TEMP/privora-deploy-secrets.json"
+
+      - name: Remove temporary secret file
+        if: always()
+        shell: bash
+        run: rm -f "$RUNNER_TEMP/privora-deploy-secrets.json"

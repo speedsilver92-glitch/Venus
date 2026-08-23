@@ -1,0 +1,14 @@
+node_modules/
+client/dist/
+server/.env
+server/data/store.json
+server/uploads/*
+!server/uploads/.gitkeep
+.DS_Store
+*.log
+.dev.vars
+.dev.vars.*
+.env
+.env.*
+*.deploy-secrets.json
+deploy-secrets*

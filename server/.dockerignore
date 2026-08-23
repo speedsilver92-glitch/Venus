@@ -1,0 +1,13 @@
+.git
+.github
+.vscode
+**/node_modules
+client/dist
+server/uploads/*
+!server/uploads/.gitkeep
+server/data
+server/.env
+.env
+*.zip
+npm-debug.log*
+.DS_Store
