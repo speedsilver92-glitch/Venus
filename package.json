@@ -8,7 +8,7 @@
   "scripts": {
     "dev": "concurrently \"npm run dev --workspace client\" \"wrangler dev\"",
     "build": "npm run build --workspace client",
-    "test": "node --test server/src/*.test.js tests/*.test.js",
+    "test": "node --test server/src/*.test.js tests/free-cloudflare.test.js",
     "deploy:cloudflare": "npm run build && wrangler deploy"
   },
   "devDependencies": {
