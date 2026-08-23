@@ -21,7 +21,12 @@
 
   "migrations": [
     {
+      "tag": "v1",
+      "new_sqlite_classes": ["PrivoraContainer"]
+    },
+    {
       "tag": "v2-free",
+      "deleted_classes": ["PrivoraContainer"],
       "new_sqlite_classes": ["PrivoraRoom"]
     }
   ]
