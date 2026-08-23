@@ -3,22 +3,17 @@
   "private": true,
   "version": "0.5.0",
   "workspaces": [
-    "client",
-    "server"
+    "client"
   ],
   "scripts": {
-    "dev": "concurrently \"npm run dev --workspace server\" \"npm run dev --workspace client\"",
-    "start": "npm run start --workspace server",
+    "dev": "concurrently \"npm run dev --workspace client\" \"wrangler dev\"",
     "build": "npm run build --workspace client",
     "test": "node --test server/src/*.test.js tests/*.test.js",
-    "deploy:cloudflare": "wrangler deploy"
+    "deploy:cloudflare": "npm run build && wrangler deploy"
   },
   "devDependencies": {
     "concurrently": "^9.1.2",
     "wrangler": "^4.125.0"
-  },
-  "dependencies": {
-    "@cloudflare/containers": "^0.3.7"
   },
   "type": "module"
 }

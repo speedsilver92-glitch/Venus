@@ -4,30 +4,25 @@
   "main": "worker/index.js",
   "compatibility_date": "2026-08-23",
   "compatibility_flags": ["nodejs_compat"],
-  "containers": [
-    {
-      "class_name": "PrivoraContainer",
-      "image": "./Dockerfile",
-      "instance_type": "lite",
-      "max_instances": 1,
-      "rollout_active_grace_period": 60
-    }
-  ],
+
+  "assets": {
+    "directory": "./client/dist",
+    "binding": "ASSETS"
+  },
+
   "durable_objects": {
     "bindings": [
       {
-        "name": "PRIVORA_CONTAINER",
-        "class_name": "PrivoraContainer"
+        "name": "PRIVORA_ROOM",
+        "class_name": "PrivoraRoom"
       }
     ]
   },
+
   "migrations": [
     {
-      "tag": "v1",
-      "new_sqlite_classes": ["PrivoraContainer"]
+      "tag": "v2-free",
+      "new_sqlite_classes": ["PrivoraRoom"]
     }
-  ],
-  "secrets": {
-    "required": ["JWT_SECRET"]
-  }
+  ]
 }
